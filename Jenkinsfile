@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "react-test-app"
         CONTAINER_NAME = "react-test-container"
-        HOST_PORT = "8080" 
+        HOST_PORT = "8081" 
     }
 
     stages {
