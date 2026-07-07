@@ -6,8 +6,8 @@ function App() {
       <h2>Environment Variables</h2>
       <p><strong>Title:</strong> {process.env.REACT_APP_TITLE}</p>
       <p><strong>Version:</strong> {process.env.REACT_APP_VERSION}</p>
+      <p><strong>Location:</strong> {process.env.REACT_APP_LOCATION}</p>
        <p><strong>Date:</strong> {process.env.REACT_APP_DATE}</p>
-       <p><strong>Location:</strong> {process.env.REACT_APP_DATE}</p>
     </div>
   );
 }
