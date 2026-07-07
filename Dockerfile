@@ -5,6 +5,8 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+# FIX: Grant executable permission to all binaries in node_modules
+RUN chmod -R +x node_modules/.bin
 RUN npm run build
 
 # Stage 2: Production environment using Nginx
