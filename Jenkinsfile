@@ -7,12 +7,18 @@ pipeline {
         HOST_PORT = "8081" 
     }
 
+    // git branch: 'main', url: https://github.com/chokkadevops/react-app.git
+    // choose specific branch - main or dev. pulls the code from exact branch as  initiated.
+    // safer as compared to hardcoding the git repo link
+
     stages {
         stage('Checkout Source') {
             steps {
                 checkout scm
             }
         }
+
+        // Docker image is created. 
 
         stage('Docker Build (CI)') {
             steps {
@@ -21,6 +27,8 @@ pipeline {
                 sh "docker build -t ${IMAGE_NAME}:latest ."
             }
         }
+
+        //
 
         stage('Docker Deploy (CD)') {
             steps {
