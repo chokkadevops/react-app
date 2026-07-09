@@ -19,12 +19,14 @@ pipeline {
         }
 
         // Docker image is created. 
+        // Image_Name is appended with Build version number.
 
         stage('Docker Build (CI)') {
             steps {
                 echo "Starting Docker build process..."
                 // This triggers the internal 'npm run build' inside the multi-stage Dockerfile
-                sh "docker build -t ${IMAGE_NAME}:latest ."
+                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
+                
             }
         }
 
