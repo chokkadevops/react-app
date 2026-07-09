@@ -26,7 +26,9 @@ pipeline {
                 echo "Starting Docker build process..."
                 // This triggers the internal 'npm run build' inside the multi-stage Dockerfile
                  sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
-                               
+                // Alternative bulletproof syntax:
+                //sh "docker build -t " + env.IMAGE_NAME + ":" + env.BUILD_NUMBER + " ."
+                
             }
         }
 
@@ -44,7 +46,7 @@ pipeline {
                     }
                 }
                 // Run the newly built container mapping your local port to Nginx port 80
-                sh "docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
+                sh "docker run -d --name ${CONTAINER_NAME} -p ${HOST_PORT}:80 ${IMAGE_NAME}:latest"
             }
         }
     }
