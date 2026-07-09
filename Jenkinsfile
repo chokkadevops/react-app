@@ -25,7 +25,9 @@ pipeline {
             steps {
                 echo "Starting Docker build process..."
                 // This triggers the internal 'npm run build' inside the multi-stage Dockerfile
-                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
+                // sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
+                // Alternative bulletproof syntax:
+                sh "docker build -t " + env.IMAGE_NAME + ":" + env.BUILD_NUMBER + " ."
                 
             }
         }
