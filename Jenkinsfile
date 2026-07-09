@@ -33,7 +33,7 @@ pipeline {
             }
         }
 
-        /* // Docker run the build image. 
+         // Docker run the build image. 
         
 
         stage('Docker Deploy (CD)') {
@@ -64,55 +64,7 @@ pipeline {
             
             }
         }
-    } */
+    } 
 
-    
-    stage('Docker Deploy (Test Environment)') {
-    steps {
-        script {
-            def prodName = "${CONTAINER_NAME}"
-            def tempName = "${CONTAINER_NAME}_temp"
-            
-            // 1. Check if the production container is currently running
-            def isRunning = sh(script: "docker ps -q -f name=^${prodName}\$", returnStdout: true).trim()
-            
-            if (isRunning) {
-                echo "Executing Native Docker-Managed Port Swap..."
-                
-                // STEP A: Pass '0' as the host port. Docker will pick a perfectly legal, permitted port automatically.
-                sh "docker run -d --name ${tempName} -p 0:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
-                
-                // Give it a moment to stabilize
-                sh "sleep 2"
-                
-                // OPTIONAL: If you want to see what port Docker picked in your logs:
-                def assignedPort = sh(script: "docker port ${tempName} 80 | cut -d':' -f2", returnStdout: true).trim()
-                echo "Docker successfully bound the temporary container to allowed port: ${assignedPort}"
-                
-                // STEP B: The Lightning Swap
-                sh "docker rm -f ${prodName}"
-                sh "docker rename ${tempName} ${prodName}"
-                
-                // Re-bind to your specific public production HOST_PORT
-                sh "docker stop ${prodName}"
-                sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
-                
-                // Clean up the temporary stopped container configuration
-                sh "docker rm -f ${tempName} || true"
-                
-            } else {
-                echo "Fresh deployment initialized on port ${HOST_PORT}."
-                sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
-            }
-        }
-    }
-}
-    
-    
-    
-    
-    
-    
-    
-    
-    }
+    }   
+   
