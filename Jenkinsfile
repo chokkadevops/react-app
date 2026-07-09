@@ -66,8 +66,7 @@ pipeline {
         }
     } */
 
-
-    stage('Docker Deploy (Test Environment)') {
+stage('Docker Deploy (Test Environment)') {
     steps {
         script {
             def prodName = "${CONTAINER_NAME}"
@@ -77,28 +76,27 @@ pipeline {
             def isRunning = sh(script: "docker ps -q -f name=^${prodName}\$", returnStdout: true).trim()
             
             if (isRunning) {
-                echo "Executing Dynamic Temp-Swap Deployment Pattern..."
+                echo "Executing Native Docker-Managed Port Swap..."
                 
-                // 2. DYNAMICALLY FIND AN UNUSED PORT ON THE SERVER
-                // This asks Linux to pick a totally random, free port between 1024 and 65535
-                def dynamicPort = sh(script: "python3 -c 'import socket; s=socket.socket(); s.bind((\"\", 0)); print(s.getsockname()[1]); s.close()'", returnStdout: true).trim()
-                echo "Selected free temporary port: ${dynamicPort}"
+                // STEP A: Pass '0' as the host port. Docker will pick a perfectly legal, permitted port automatically.
+                sh "docker run -d --name ${tempName} -p 0:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
                 
-                // STEP A: Spin up the new version on the randomly selected free port
-                sh "docker run -d --name ${tempName} -p ${dynamicPort}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
-                
-                // Give it 2 seconds to warm up
+                // Give it a moment to stabilize
                 sh "sleep 2"
+                
+                // OPTIONAL: If you want to see what port Docker picked in your logs:
+                def assignedPort = sh(script: "docker port ${tempName} 80 | cut -d':' -f2", returnStdout: true).trim()
+                echo "Docker successfully bound the temporary container to allowed port: ${assignedPort}"
                 
                 // STEP B: The Lightning Swap
                 sh "docker rm -f ${prodName}"
                 sh "docker rename ${tempName} ${prodName}"
                 
-                // Re-bind to your specific production HOST_PORT (e.g. port 80)
+                // Re-bind to your specific public production HOST_PORT
                 sh "docker stop ${prodName}"
                 sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
                 
-                // Clean up the leftover stopped container
+                // Clean up the temporary stopped container configuration
                 sh "docker rm -f ${tempName} || true"
                 
             } else {
@@ -106,10 +104,10 @@ pipeline {
                 sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
             }
         }
-     }
-   }
- }
+    }
 }
+    
+
 
     
 
