@@ -66,7 +66,8 @@ pipeline {
         }
     } */
 
-stage('Docker Deploy (Test Environment)') {
+    
+    stage('Docker Deploy (Test Environment)') {
     steps {
         script {
             def prodName = "${CONTAINER_NAME}"
@@ -105,23 +106,13 @@ stage('Docker Deploy (Test Environment)') {
             }
         }
     }
-    }
 }
     
-
-
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    }
