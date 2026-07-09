@@ -105,6 +105,7 @@ stage('Docker Deploy (Test Environment)') {
             }
         }
     }
+    }
 }
     
 
