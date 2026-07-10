@@ -1,4 +1,4 @@
-pipeline {
+/* pipeline {
     agent any
 
     environment {
@@ -67,4 +67,62 @@ pipeline {
     } 
 
     }   
-   
+    */
+
+
+    pipeline {
+    agent any
+    
+    environment {
+        CONTAINER_NAME = 'react-test-container'
+        IMAGE_NAME     = 'react-test-app'
+        HOST_PORT      = '80'
+    }
+
+    stages {
+        stage('Checkout Source') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Docker Build (CI)') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
+            }
+        }
+
+        stage('Docker Deploy (Test Environment)') {
+            steps {
+                script {
+                    def prodName = "${CONTAINER_NAME}"
+                    def tempName = "${CONTAINER_NAME}_temp"
+                    
+                    // 1. Check if the production container is currently running
+                    def isRunning = sh(script: "docker ps -q -f name=^${prodName}\$", returnStdout: true).trim()
+                    
+                    if (isRunning) {
+                        echo "Executing Native Docker-Managed Port Swap..."
+                        
+                        // STEP A: Pass '0' as the host port to let Docker find a safe dynamic port natively
+                        sh "docker run -d --name ${tempName} -p 0:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                        sh "sleep 2"
+                        
+                        // STEP B: The Lightning Swap
+                        sh "docker rm -f ${prodName}"
+                        sh "docker rename ${tempName} ${prodName}"
+                        
+                        // Re-bind to your specific public production HOST_PORT
+                        sh "docker stop ${prodName}"
+                        sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                        sh "docker rm -f ${tempName} || true"
+                        
+                    } else {
+                        echo "Fresh deployment initialized on port ${HOST_PORT}."
+                        sh "docker run -d --name ${prodName} -p ${HOST_PORT}:80 ${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    }
+                } // Closes script
+            } // Closes steps
+        } // Closes stage
+    } // Closes stages
+} // Closes pipeline
