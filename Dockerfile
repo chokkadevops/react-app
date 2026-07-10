@@ -25,7 +25,7 @@
  #copies remaining local source code files from host machine into the container's work directory.
  COPY . .
  # FIX: Grant executable permission to all binaries in node_modules
- RUN chmod -R +x node_modules/.bin
+ #RUN chmod -R +x node_modules/.bin
  #Triggers the build script specified in package.json. 
  #This compiles, minifies, and bundles your raw React components into static HTML, CSS, and JS files, saving them in a new /app/build directory
  RUN npm run build
