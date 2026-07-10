@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  react-app:
+    container_name: react-test-container
+    # 1. Build configuration for Jenkins
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
+    # 2. Port mapping (Host Port : Container Port)
+    # Jenkins or your server can pass the HOST_PORT env variable dynamically
+    ports:
+      - "${HOST_PORT:-80}:80"
+    
+    # 3. Environment Variables passed to the React container at runtime
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+
+    # 4. Reliability configuration
+    restart: unless-stopped
