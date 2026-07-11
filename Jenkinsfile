@@ -1,15 +1,11 @@
 pipeline {
     agent any
 
-     environment {
-         IMAGE_NAME = "react-test-app"
+    environment {
+        IMAGE_NAME = "react-test-app"
         CONTAINER_NAME = "react-test-container"
-         HOST_PORT = "8081" 
-     }
-
-    // git branch: 'main', url: https://github.com/chokkadevops/react-app.git
-    // choose specific branch - main or dev. pulls the code from exact branch as  initiated.
-    // safer as compared to hardcoding the git repo link
+        HOST_PORT = "8081" 
+    }
 
     stages {
         stage('Checkout Source') {
@@ -18,38 +14,21 @@ pipeline {
             }
         }
 
-        
-        // Docker building an Image. Build number is fetched Jenkins pipeline.
-        // -t verbose is for tag. tag the name identifier for the build image.
-        // . is for current directory. It is mandatory syntax for this shell script.
-
         stage('Docker Build (CI)') {
             steps {
-                
-                // This triggers the internal 'npm run build' inside the multi-stage Dockerfile
-                // verbose -t = tag the image with Image name and build number.
-                 sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
-                
+                // We pass the build number so Docker registers the specific tag locally
+                sh "docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} ."
             }
         }
 
-        stage ('Docker Deploy (IaC CD)')
-        {
-
-                steps {
+        stage('Docker Deploy (IaC CD)') {
+            steps {
                 echo "Deploying ReactApp using Docker Compose..."
-                // --build forces Docker to compile the Dockerfile changes
-                // -d runs the container seamlessly in the background (detached mode)
-                // Compose automatically stops and replaces the old container with no downtime
-                // Added by Chokka
-                // docker compose syntax varies based on version.
-                sh "docker compose up -d --build"
+                
+                // We explicitly pass the BUILD_NUMBER into the environment of the shell execution
+                // and use the absolute path to guarantee execution stability
+                sh "IMAGE_NAME=${IMAGE_NAME} TAG=${env.BUILD_NUMBER} HOST_PORT=${HOST_PORT} /usr/bin/docker-compose up -d"
             }
-
         }
-
-        
     } 
-
- }   
-   
+}

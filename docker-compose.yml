@@ -8,19 +8,11 @@ version: '3.8'
 
 services:
   react-app:
-    # Uses the IMAGE_NAME and BUILD_NUMBER passed from Jenkins, defaulting to latest locally
-    image: ${IMAGE_NAME:-react-test-app}:${BUILD_NUMBER:-latest}
+    # Uses the IMAGE_NAME and TAG passed from Jenkins
+    image: ${IMAGE_NAME:-react-test-app}:${TAG:-latest}
     container_name: react-test-container
-    
-    build:
-      context: .
-      dockerfile: Dockerfile
     
     ports:
       - "${HOST_PORT:-8081}:80"
     
-    #environment:
-    #  - NODE_ENV=${NODE_ENV:-production}
-    #  - REACT_APP_API_URL=${REACT_APP_API_URL}
-
     restart: unless-stopped
