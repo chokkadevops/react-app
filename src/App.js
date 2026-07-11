@@ -4,10 +4,10 @@ function App() {
   return (
     <div style={{ padding: 20 }}>
       <h2>Environment Variables</h2>
-      <p><strong>Title:</strong> {process.env.REACT_APP_TITLE}</p>
-      <p><strong>Version:</strong> {process.env.REACT_APP_VERSION}</p>
-      <p><strong>Location:</strong> {process.env.REACT_APP_LOCATION}</p>
-       <p><strong>Date:</strong> {process.env.REACT_APP_DATE}</p>
+      <p><strong>Title:</strong> ICANIO TRAINING PROJECT</p>
+      <p><strong>Version:</strong> v1.0</p>
+      <p><strong>Location:</strong> Tirunelveli</p>
+       <p><strong>Date:</strong> 11-07-2026</p>
     </div>
   );
 }
