@@ -1,13 +1,10 @@
 pipeline {
     agent any
 
-    // Commented by chokka. 
-    // env file has environment.
-    // environment {
-    //     IMAGE_NAME = "react-test-app"
-    //     CONTAINER_NAME = "react-test-container"
-    //     HOST_PORT = "8081" 
-    // }
+   
+    environment {
+         IMAGE_NAME = "react-test-app"
+     }
 
     stages {
         stage('Checkout Source') {
