@@ -42,8 +42,8 @@ pipeline {
                 // -d runs the container seamlessly in the background (detached mode)
                 // Compose automatically stops and replaces the old container with no downtime
                 // Added by Chokka
-                // docker-compose and docker compose syntax varies based on version.
-                sh "docker-compose up -d --build"
+                // docker compose syntax varies based on version.
+                sh "docker compose up -d --build"
             }
 
         }
