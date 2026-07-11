@@ -4,12 +4,25 @@
 # docker-compose.yml IaC for React Application.
 # HOST_PORT is standardized environment variable declaration.
 
-version: '3.8'
+# Added by Chokka. version syntax is obsolete. 
+#version: '3.8'
 
 services:
   react-app:
     image: ${IMAGE_NAME}:${TAG}
     container_name: react-test-container
+    ports:
+      - "${HOST_PORT}:80"
+    restart: unless-stopped
+
+# Testing / Learning purpose on having multiple containers.
+# Purpose to define database connection.
+# Purpose to define webservices or rest services.
+
+  services:
+  react-app-two:
+    image: ${IMAGE_NAME}:${TAG}
+    container_name: react-test-container-2
     ports:
       - "${HOST_PORT}:80"
     restart: unless-stopped
