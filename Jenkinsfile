@@ -21,13 +21,12 @@ pipeline {
             }
         }
 
-        stage('Docker Deploy (IaC CD)') {
+       stage ('Docker Deploy (IaC CD)') {
             steps {
                 echo "Deploying ReactApp using Docker Compose..."
-                
-                // We explicitly pass the BUILD_NUMBER into the environment of the shell execution
-                // and use the absolute path to guarantee execution stability
-                sh "IMAGE_NAME=${IMAGE_NAME} TAG=${env.BUILD_NUMBER} HOST_PORT=${HOST_PORT} /usr/bin/docker-compose up -d"
+                // Use standard 'docker compose' which your environment is already configured to read
+                // Added by chokka, changes to Jenkinsfile.
+                sh "IMAGE_NAME=${IMAGE_NAME} TAG=${env.BUILD_NUMBER} HOST_PORT=${HOST_PORT} docker compose up -d"
             }
         }
     } 
