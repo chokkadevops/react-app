@@ -5,7 +5,7 @@
 # HOST_PORT is standardized environment variable declaration.
 
 # Added by Chokka. version syntax is obsolete. 
-#version: '3.8'
+version: '3.8'
 
 services:
   react-app:
