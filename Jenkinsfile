@@ -24,9 +24,13 @@ pipeline {
         stage ('Docker Deploy (IaC CD)') {
             steps {
                 echo "Deploying ReactApp using Docker Compose..."
-                // Now this points directly to the real, unblocked standalone binary
-                // Added
-                sh "IMAGE_NAME=${IMAGE_NAME} TAG=${env.BUILD_NUMBER} HOST_PORT=${HOST_PORT} /usr/bin/docker-compose up -d"
+                // Using double quotes allows Jenkins to swap ${IMAGE_NAME} and ${env.BUILD_NUMBER} before sending to bash
+                sh """
+                    export IMAGE_NAME="${IMAGE_NAME}"
+                    export TAG="${env.BUILD_NUMBER}"
+                    export HOST_PORT="${HOST_PORT}"
+                    /usr/bin/docker-compose up -d --force-recreate
+                """
             }
         }
 
