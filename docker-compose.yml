@@ -19,7 +19,7 @@ services:
 # Purpose to define database connection.
 # Purpose to define webservices or rest services.
 
-  services:
+  
   react-app-two:
     image: ${IMAGE_NAME}:${TAG}
     container_name: react-test-container-2
