@@ -3,6 +3,7 @@
 # Date : 10-07-2026
 # docker-compose.yml IaC for React Application.
 # HOST_PORT is standardized environment variable declaration.
+# HOST_PORT_ONE and HOST_PORT_TWO are declared for two separate services.
 
 # Added by Chokka. version syntax is obsolete. 
 version: '3.8'
@@ -12,7 +13,7 @@ services:
     image: ${IMAGE_NAME}:${TAG}
     container_name: react-test-container
     ports:
-      - "${HOST_PORT}:80"
+      - "${HOST_PORT_ONE}:80"
     restart: unless-stopped
 
 # Testing / Learning purpose on having multiple containers.
