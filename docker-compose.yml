@@ -6,7 +6,7 @@
 # HOST_PORT_ONE and HOST_PORT_TWO are declared for two separate services.
 
 # Added by Chokka. version syntax is obsolete. 
-version: '3.8'
+#version: '3.8'
 
 services:
   react-app:
